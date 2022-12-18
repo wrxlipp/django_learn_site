@@ -1,13 +1,14 @@
-<!DOCTYPE HTML>
+{% extends 'navbar.html' %}
 
-<html>
-    <body>
-        <h1>Запрацював бложик</h1>
-        {% for post in posts %}
-            <h3>{{ post.title }}</h3>
-            <h6>{{ post.created_at }}</h6>
-            <div>{{ post.text }}</div>
-            <br><br><br>
-        {% endfor %}
-    </body>
-</html>
+    {% block content %}
+        <h1>Запрацював блог</h1>
+        {% if posts %}
+            {% for post in posts %}
+                <h3>{{ post.title }}</h3>
+                <h6>{{ post.created_at }}</h6>
+                <div>{{ post.text }}</div>
+                <br><br><br>
+            {% endfor %}
+        {% endif %}
+    {% endblock %}
+    
