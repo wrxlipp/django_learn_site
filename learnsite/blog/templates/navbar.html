@@ -10,8 +10,13 @@
               <a href="/" class="brand-logo blue-text text-darken-2">Logo</a>
               <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a href="/admin">Admin</a></li>
-                <li><a href="/register">Зареєструватись</a></li>
-                <li><a href="collapsible.html">JavaScript</a></li>
+                {% if not user.is_authenticated %}
+                  <li><a href="/login">Увійти</a></li>
+                  <li><a href="/register">Зареєструватись</a></li>
+                {% else %}
+                  <li><a href="/logout">Вийти</a></li>
+                {% endif %}
+
               </ul>
             </div>
         </nav>

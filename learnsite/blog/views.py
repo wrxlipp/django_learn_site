@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Post
+from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm
 # Create your views here.
@@ -25,6 +26,15 @@ def register(request):
             user = form.save()
             login(request, user)
             return redirect("/")
+        else:
+            print("ERROR DURING REGISTRATION!+")
+            for msg in form.error_messages:
+                messages.error(request, f"{msg}")
+            return render(request, 'register.html', {'form': form})
     # GET incoming
     data_dict = {'form': UserCreationForm}
     return render(request, 'register.html', data_dict)
+
+def logout_request(request):
+    logout(request)
+    return redirect("/")
