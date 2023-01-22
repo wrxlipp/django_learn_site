@@ -5,6 +5,7 @@ urlpatterns = [
     path(r'', views.blog_main), # domen.com/blog/
     path('register/', views.register),
     path('logout/', views.logout_request),
+    path('login/', views.login_request),
     path('<slug>/', views.slug_process),
 ]
 
