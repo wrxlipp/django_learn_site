@@ -25,6 +25,8 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+            username = form.cleaned_data.get("username")
+            messages.success(request, f"Створено новий акаунт: {username}")
             return redirect("/")
         else:
             print("ERROR DURING REGISTRATION!+")
@@ -37,4 +39,5 @@ def register(request):
 
 def logout_request(request):
     logout(request)
+    messages.info(request ,"Ви вийшли з акаунту!")
     return redirect("/")

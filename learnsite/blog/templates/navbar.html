@@ -3,6 +3,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     </head>
     <body>
         <nav>
@@ -23,7 +24,19 @@
         {% block content %}
         {% endblock %}
 
-        {% block footer %}
-        {% endblock%}
+        {% if messages %}
+          <script> 
+            M.AutoInit();
+            {% for msg in messages %}
+              {% if msg.tags == 'error' %}
+                M.toast({html: "{{msg}}", classes: "orange"});
+              {% elif msg.tags == 'success' %}
+                M.toast({html: "{{msg}}", classes: "green"});
+              {% elif msg.tags == 'info' %}
+                M.toast({html: "{{msg}}", classes: "blue"});
+              {% endif %}
+            {% endfor %}
+          </script>
+        {% endif %}
     </body>
 </html>
