@@ -3,11 +3,23 @@ from .models import Post
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 # Create your views here.
 
+
+
 def blog_main(request, *args):
+    page = request.GET.get('page')
+    posts = Post.objects.all()
+    paginator = Paginator(posts, 2)
+    try:
+        data_page = paginator.page(page)
+    except PageNotAnInteger:
+        data_page = paginator.page(1)
+    except EmptyPage:
+        data_page = paginator.page(paginator.num_pages)
     data_dict  ={
-        "posts": Post.objects.all()
+        "posts": data_page
     }
     return render(request, 'blog_main.html', data_dict)
 
