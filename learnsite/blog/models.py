@@ -9,14 +9,16 @@ class Profile(models.Model):
                                default = 'blog/static/img/profiles/default.png',
                                verbose_name = 'Фото профілю')
     about = models.TextField(max_length=500,
-                             verbose_name = 'Про себе'
+                             verbose_name = 'Про себе',
                              blank=True)
     def save(self,*agr, **kwargs):
         super().save()
-        img = Image.open(self.img.path)
+        img = Image.open(self.avatar.path)
         if img.height>120 or img.width>120:
             img.thumbnail((120, 120))
             img.save(self.avatar.path)
+    def __str__(self):
+        return self.user.username
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
