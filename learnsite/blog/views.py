@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Post
+from .models import Post, Profile
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -30,7 +30,12 @@ def profile(request):
     if request.method == 'POST':
         pass
     else:
-        profile_form = ProfileForm(instance=request.user.profile)
+        try:
+            request.user.profile
+        except Profile.DoesNotExist:
+            Profile.objects.create(user = request.user).save()
+        finally:
+            profile_form = ProfileForm(instance=request.user.profile)
     profile = request.user.profile
     return render(request, 'profile.html',{
         'profile': profile,
