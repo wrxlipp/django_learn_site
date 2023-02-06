@@ -31,7 +31,7 @@
                     {% if posts.has_previous %}
                         <li class="waves-effect"><a href="?page={{ posts.previous_page_number }}"><i class="material-icons">chevron_left</i></a></li>
                     {% else %}    
-                        <li class="disabled"><a href=""><i class="material-icons">chevron_left</i></a></li>
+                        <li class="disabled"><a class="disabled" href=""><i class="material-icons">chevron_left</i></a></li>
                     {% endif %}
 
                     {% for num in posts.paginator.page_range %}

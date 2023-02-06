@@ -28,7 +28,13 @@ def blog_main(request, *args):
 @login_required
 def profile(request):
     if request.method == 'POST':
-        pass
+        profile_form = ProfileForm(request.POST,
+                                   request.FILES,
+                                   instance=request.user.profile)
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.success(request, "Профіль оновлено")
+            return redirect(to='user_profile')
     else:
         try:
             request.user.profile
@@ -39,8 +45,18 @@ def profile(request):
     profile = request.user.profile
     return render(request, 'profile.html',{
         'profile': profile,
-        'profile-form': profile_form 
+        'profile_form': profile_form 
     })
+
+def look_profile(request, username):
+    look_for = Profile.objects.get(user__username=username)
+    if look_profile == request.user.profile:
+        return redirect(to='user_profile')
+    else:
+        return (request, "look_profile.html",{
+            'profile': look_for, 
+        })
+
 
 def search_post(request):
     """Functionality for navbar 
