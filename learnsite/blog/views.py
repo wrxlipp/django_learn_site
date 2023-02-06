@@ -50,10 +50,10 @@ def profile(request):
 
 def look_profile(request, username):
     look_for = Profile.objects.get(user__username=username)
-    if look_profile == request.user.profile:
+    if look_for == request.user.profile:
         return redirect(to='user_profile')
     else:
-        return (request, "look_profile.html",{
+        return render(request, "look_profile.html",{
             'profile': look_for, 
         })
 
