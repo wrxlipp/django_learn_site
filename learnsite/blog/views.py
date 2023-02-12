@@ -57,6 +57,14 @@ def look_profile(request, username):
             'profile': look_for, 
         })
 
+def like_post(request, post_id):
+    """Add one like for one post per User"""
+    post = Post.objects.get(id=post_id)
+    if post.likes.filter(id=request.user.id).exists():
+        pass
+    else:
+        post.likes.add(request.user)    
+    return redirect(f'/{post.post_slug}')
 
 def search_post(request):
     """Functionality for navbar 
@@ -77,9 +85,13 @@ def slug_process(request, slug):
         if request.user.is_authenticated:
             if not post.views_number.filter(id=request.user.id).exists():
                 post.views_number.add(request.user)
-        views = post.get_views_number()        
+        views = post.get_views_number()
+        likes = post.get_likes_number() 
+        is_liked = post.likes.filter(id=request.user.id).exists()      
         data_dict = { 'post': post,
-                      'views_num': views }
+                      'views_num': views,
+                      'likes_num': likes,
+                      'is_liked': is_liked }
         return render(request, 'post_view.html', data_dict)
 
 def register(request):

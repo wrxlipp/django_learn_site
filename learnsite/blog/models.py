@@ -32,8 +32,11 @@ class Post(models.Model):
                             max_length=200,
                             verbose_name="Картинка для поста")
     views_number = models.ManyToManyField(User, related_name="views_rating", blank=True)
+    likes =  models.ManyToManyField(User, related_name="post_like", blank=True)
     def get_views_number(self):
         return self.views_number.count()
+    def get_likes_number(self):
+        return self.likes.count()
     def save(self, *agr, **kwargs):
         super().save()
         img = Image.open(self.img.path)
