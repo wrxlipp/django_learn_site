@@ -20,15 +20,17 @@
                                     <h6>Переглянуто: {{ views_num }}</h6>
                                 </div>
                                 <div class="col s6 l6">
-                                    <form method="GET" action="{% url 'like_post' post.id %}">
-                                        <button type="submit" class="btn">
-                                            {% if is_liked %}
-                                                <i class="medium material-icons">favorite</i>
-                                            {% else %}
-                                                <i class="medium material-icons">favorite_border</i>
-                                            {% endif %}
-                                        </button>
-                                    </form>
+                                    {% if user.is_authenticated %}
+                                        <form id="like" method="GET" action="{% url 'like_post' post.id %}">             
+                                        </form>
+                                    {% endif %}
+                                    <button form="like" type="submit" class="btn">
+                                        {% if is_liked %}
+                                            <i class="medium material-icons">favorite</i>
+                                        {% else %}
+                                            <i class="medium material-icons">favorite_border</i>
+                                        {% endif %}
+                                    </button>
                                     <strong>{{ likes_num }} Like{{ likes_num|pluralize }}</strong>
                                 </div>  
                             </div>
@@ -39,6 +41,22 @@
                     </div>
                 </div>
             </div>
+            {% if user.is_authenticated %}
+                <div class="row">
+                    <form method="POST">
+                        {% csrf_token %} 
+                        {{ comment_form.as_p }}
+                        <button class="btn" type="submit">Опублікувати</button>
+                    </form>
+                </div>
+            {% endif %}
+            {% for comment in comments %}
+                <div class="row">
+                    <img src="/{{comment.author.profile.avatar}}">
+                    <p>{{ comment }}</p>
+                    <p>{{ comment.created_at }}</p>
+                </div>
+            {% endfor %}
         {% endif %}
     </div>
     {% endblock %}

@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
-from .models import Post, Profile
+from .models import Post, Profile, Comment
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .forms import ProfileForm
+from .forms import ProfileForm, AddCommentForm
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -76,7 +76,22 @@ def search_post(request):
     data_dict = {"posts": posts}
     return render(request, 'blog_main.html', data_dict )
 
-
+def get_comment_form(request, post):
+    """Post user comentary Form processing"""
+    if request.method == "POST":
+        print("New Comment preparing!!!!!!!!!!!---------------")
+        form = AddCommentForm(request.POST or None)
+        if form.is_valid():
+            print("New Comment!!!!!!!!!!!---------------")
+            content = request.POST.get('content')
+            comment = Comment.objects.create(post=post,
+                                             author=request.user,
+                                             content=content)
+            comment.save()
+        return redirect(f'/{post.post_slug}')
+    else:
+        form = AddCommentForm()
+    return form
 
 def slug_process(request, slug):
     post_slugs = [ p.post_slug for p in Post.objects.all()]
@@ -87,9 +102,13 @@ def slug_process(request, slug):
                 post.views_number.add(request.user)
         views = post.get_views_number()
         likes = post.get_likes_number() 
-        is_liked = post.likes.filter(id=request.user.id).exists()      
+        is_liked = post.likes.filter(id=request.user.id).exists() 
+        comments = Comment.objects.filter(post=post)
+        form = get_comment_form(request, post)    
         data_dict = { 'post': post,
                       'views_num': views,
+                      'comment_form': form,
+                      'comments': comments,
                       'likes_num': likes,
                       'is_liked': is_liked }
         return render(request, 'post_view.html', data_dict)
